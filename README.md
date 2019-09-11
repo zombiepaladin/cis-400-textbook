@@ -10,6 +10,6 @@ The sections of this textbook are written in Xamarin Workbooks format.  The asso
 
 ## Table of Contents
 1. Classes and Objects
-  1. Encapsulation
-  2. State
-  3. Memory
+    1. Encapsulation
+    2. State
+    3. Memory
