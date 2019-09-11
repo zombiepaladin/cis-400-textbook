@@ -1,0 +1,121 @@
+---
+uti: com.xamarin.workbook
+id: 502b41aa-cea6-4fed-87fa-0b3c02de525e
+title: index
+platforms:
+- Console
+---
+
+# State and Behavior
+
+The data stored in a program at any given moment (in the form of variables, objects, etc.) is the *state* of the program.  Consider a variable:
+
+```csharp
+int a = 5;
+```
+
+The state of the variable **a** after this line is **5**.  If we then run:
+
+```csharp
+a = a * 3;
+```
+
+The state is now **15**. Consider the Vector3 struct we defined in the last section:
+
+```csharp
+public struct Vector3 {
+    public double x;
+    public double y;
+    public double z;
+    
+    // constructor
+    public Vector3(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+```
+
+If we create an instance of that struct in the variable **b**:
+
+```csharp
+Vector3 b = new Vector3(1.2, 3.7, 5.6);
+```
+
+The state of our variable **b** is {1.2, 3.7, 5.6}.  If we change one of **b**’s fields:
+
+```csharp
+b.x = 6.0;
+```
+
+The state of our variable **b** is {6.0, 3.7, 5.6}.
+
+We can also think about the state of the *program*, which would be something like: {a: 5, b: {x: 6.0, y: 3.7, z: 5.6}}, or a state vector like: {5, 6.0, 3.7, 5.6}.  We can therefore think of a program as a *state machine*.
+
+We can in fact, draw our entire program as a state table listing all possible legal states (combinations of variable values) and the transitions between those states.  Techniques like this can be used to reason about our programs and even prove them correct!
+
+## Behavior
+
+What causes our program to transition between states?  If we look at our earlier examples, it is clear that \*assignment \*is a strong culprit.  Expressions clearly have a role to play, and control-flow structures decide which transformations take place.  In fact, we can say that our program code is what drives state changes - the \*behavior \*of the program.
+
+Just as we can encapsulate state (as we did in our struct), we can encapsulate behavior in functions, like this one:
+
+```csharp
+public Vector3 Add(Vector3 first, Vector3 second) {
+    return new Vector3(
+        first.x + second.x, 
+        first.y + second.y, 
+        first.z + second.z
+    );
+}
+```
+
+Now we can use that encapsulated behavior to cause a state change:
+
+```csharp
+Vector3 c = new Vector3(1.2, 1.4, 3.2);
+Vector3 d = Add(b, c);
+```
+
+Object-orientation took the next step of encapsulating the related *state* and *behavior* together into a single object.  Consider re-writing our Vector3 as a class:
+
+```csharp
+class Vector3 {
+    public double x;
+    public double y;
+    public double z;
+
+    public Vector3(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public Vector3 Add(Vector3 other) {
+        return new Vector3(
+            this.x + other.x, 
+            this.y + other.y, 
+            this.z + other.z
+        );
+    }
+
+    public Vector3 Subtract(Vector3 other) {
+        return new Vector3(
+            this.x - other.x, 
+            this.y - other.y, 
+            this.z - other.z
+        );
+    }
+}
+```
+
+With this cass definition, we can utilize state and behavior together:
+
+```csharp
+Vector3 up = new Vector3(0.0, 1.0, 0.0);
+Vector3 left = new Vector3(-1.0, 0.0, 0.0);
+Vector3 difference = up.Subtract(left);
+```
+
+## Accessors
